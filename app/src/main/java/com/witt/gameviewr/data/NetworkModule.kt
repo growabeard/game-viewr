@@ -1,5 +1,6 @@
 package com.witt.gameviewr.data
 
+import com.witt.gameviewr.data.service.GameApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
