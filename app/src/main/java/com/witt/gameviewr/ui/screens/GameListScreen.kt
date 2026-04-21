@@ -38,7 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.witt.gameviewr.ui.GameListUiState
 import com.witt.gameviewr.R
-import com.witt.gameviewr.data.Game
+import com.witt.gameviewr.data.model.Game
 import com.witt.gameviewr.ui.theme.GameViewrTheme
 
 @Preview(showSystemUi = true)
