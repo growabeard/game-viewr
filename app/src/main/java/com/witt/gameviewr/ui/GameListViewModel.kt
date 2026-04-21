@@ -15,16 +15,15 @@ class GameListViewModel : ViewModel() {
     val uiState = _uiState.asStateFlow()
 
     fun onSearch(query: String) { //TODO implement this
-        try {
-            viewModelScope.launch {
-                _uiState.update {
-                    it.copy(
-                        isLoading = true,
-                        listOfGames = emptyList()
-                    )
-                }
-                delay(700)
-                //TODO move this to the repository when implemented
+        val trimmedQuery = query.trim()
+        if (trimmedQuery.isEmpty()) return
+
+        viewModelScope.launch {
+            try {
+                _uiState.update { it.copy(isLoading = true, error = null, hasSearched = true) }
+
+                delay(2000) // Simulate network call
+
                 _uiState.update {
                     it.copy(
                         listOfGames = (1..(Math.random() * 100).toInt()).map { index ->
@@ -33,24 +32,23 @@ class GameListViewModel : ViewModel() {
                                 title = "Game $index"
                             )
                         },
+                        isLoading = false,
+                        error = null
+                    )
+                }
+            } catch (e: Exception) {
+                _uiState.update {
+                    it.copy(
+                        error = e.message ?: "An unknown error occurred",
                         isLoading = false
                     )
                 }
             }
-        } catch (e: Exception) {
-            _uiState.update {
-                it.copy(
-                    error = e.message,
-                    isLoading = false
-                )
-            }
-        } finally {
-            _uiState.update {
-                it.copy(
-                    isLoading = false
-                )
-            }
         }
+    }
+
+    fun onClearInputClick() {
+        onQueryChange("")
     }
 
     fun onQueryChange(newQuery: String) {
@@ -62,5 +60,6 @@ data class GameListUiState(
     val query: String = "",
     val listOfGames: List<Game> = emptyList(),
     val isLoading: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    val hasSearched: Boolean = false
 )

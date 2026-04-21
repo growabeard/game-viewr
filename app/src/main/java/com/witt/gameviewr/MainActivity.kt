@@ -29,6 +29,7 @@ class MainActivity : ComponentActivity() {
                         uiState = viewModel.uiState.collectAsStateWithLifecycle(),
                         onSearch = viewModel::onSearch,
                         onQueryChange = viewModel::onQueryChange,
+                        onClearInputClick = viewModel::onClearInputClick,
                         modifier = Modifier.padding(innerPadding),
                     )
                 }
