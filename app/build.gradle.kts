@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.retrofit.converter.kotlinx.serialization)
+    implementation(libs.hilt)
     testImplementation(libs.mockk)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
