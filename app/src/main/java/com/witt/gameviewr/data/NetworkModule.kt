@@ -17,6 +17,8 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
+    const val baseUrl = "https://www.cheapshark.com/api/1.0/"
+
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
@@ -43,7 +45,7 @@ object NetworkModule {
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         val json = Json { ignoreUnknownKeys = true }
         return Retrofit.Builder()
-            .baseUrl("https://www.cheapshark.com/api/1.0")
+            .baseUrl(baseUrl)
             .client(okHttpClient)
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .build()
