@@ -25,18 +25,12 @@ class GameListViewModel @Inject constructor(private val repository: GameListRepo
             try {
                 _uiState.update { it.copy(isLoading = true, error = null, hasSearched = true) }
 
-                delay(2000) // Simulate network call
+                val result = repository.getGames(query)
 
                 _uiState.update {
                     it.copy(
-                        listOfGames = (1..(Math.random() * 100).toInt()).map { index ->
-                            Game(
-                                id = index.toString(),
-                                title = "Game $index"
-                            )
-                        },
-                        isLoading = false,
-                        error = null
+                        listOfGames = result,
+                        isLoading = false
                     )
                 }
             } catch (e: Exception) {
