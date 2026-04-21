@@ -1,6 +1,11 @@
 package com.witt.gameviewr.ui
 
 import com.witt.gameviewr.MainDispatcherRule
+import com.witt.gameviewr.data.model.Game
+import com.witt.gameviewr.data.repository.GameListRepository
+import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.impl.annotations.RelaxedMockK
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -13,9 +18,14 @@ class GameListViewModelTest {
 
     private lateinit var viewModel: GameListViewModel
 
+    @RelaxedMockK
+    private lateinit var repository: GameListRepository
+
     @Before
     fun setUp() {
-        viewModel = GameListViewModel()
+        MockKAnnotations.init(this)
+
+        viewModel = GameListViewModel(repository)
     }
 
     @Test

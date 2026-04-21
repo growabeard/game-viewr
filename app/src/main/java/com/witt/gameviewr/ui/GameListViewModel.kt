@@ -2,14 +2,17 @@ package com.witt.gameviewr.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.witt.gameviewr.data.Game
-import kotlinx.coroutines.delay
+import com.witt.gameviewr.data.model.Game
+import com.witt.gameviewr.data.repository.GameListRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class GameListViewModel : ViewModel() {
+@HiltViewModel
+class GameListViewModel @Inject constructor(private val repository: GameListRepository) : ViewModel() {
 
     private val _uiState = MutableStateFlow(GameListUiState())
     val uiState = _uiState.asStateFlow()

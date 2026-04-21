@@ -13,7 +13,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.witt.gameviewr.ui.GameListViewModel
 import com.witt.gameviewr.ui.screens.GameListScreen
 import com.witt.gameviewr.ui.theme.GameViewrTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val viewModel by viewModels<GameListViewModel>()
