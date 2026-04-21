@@ -1,8 +1,6 @@
 package com.witt.gameviewr.ui
 
 import com.witt.gameviewr.MainDispatcherRule
-import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -36,5 +34,16 @@ class GameListViewModelTest {
         viewModel.onQueryChange("some query")
 
         assertEquals("some query", viewModel.uiState.value.query)
+    }
+
+    @Test
+    fun `ensure onClearInputClick will clear the query in state`() {
+        viewModel.onQueryChange("some query")
+
+        assertEquals("some query", viewModel.uiState.value.query)
+
+        viewModel.onClearInputClick()
+
+        assertEquals("", viewModel.uiState.value.query)
     }
 }

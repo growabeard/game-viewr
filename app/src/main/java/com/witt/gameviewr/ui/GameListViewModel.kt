@@ -53,6 +53,10 @@ class GameListViewModel : ViewModel() {
         }
     }
 
+    fun onClearInputClick() {
+        onQueryChange("")
+    }
+
     fun onQueryChange(newQuery: String) {
         _uiState.value = _uiState.value.copy(query = newQuery)
     }

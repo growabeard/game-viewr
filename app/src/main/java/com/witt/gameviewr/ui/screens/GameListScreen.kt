@@ -52,6 +52,7 @@ fun GameListPreview() {
             },
             onSearch = {},
             onQueryChange = {},
+            onClearInputClick = {},
             modifier = Modifier
         )
     }
@@ -63,6 +64,7 @@ fun GameListScreen(
     uiState: State<GameListUiState>,
     onSearch: (String) -> Unit,
     onQueryChange: (String) -> Unit,
+    onClearInputClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val uiState = uiState.value
