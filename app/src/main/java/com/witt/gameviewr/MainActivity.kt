@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.witt.gameviewr.ui.GameListViewModel
 import com.witt.gameviewr.ui.screens.GameListScreen
 import com.witt.gameviewr.ui.theme.GameViewrTheme
 
@@ -24,11 +26,10 @@ class MainActivity : ComponentActivity() {
             GameViewrTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     GameListScreen(
-                        query = viewModel.query,
+                        uiState = viewModel.uiState.collectAsStateWithLifecycle(),
                         onSearch = viewModel::onSearch,
                         onQueryChange = viewModel::onQueryChange,
                         modifier = Modifier.padding(innerPadding),
-                        searchResults = viewModel.listOfGames
                     )
                 }
             }

@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -18,12 +17,17 @@ import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.witt.gameviewr.ui.GameListUiState
 import com.witt.gameviewr.R
+import com.witt.gameviewr.data.Game
 import com.witt.gameviewr.ui.theme.GameViewrTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,10 +36,22 @@ import com.witt.gameviewr.ui.theme.GameViewrTheme
 fun GameListPreview() {
     GameViewrTheme {
         GameListScreen(
-            query = "",
+            uiState = remember {
+                mutableStateOf(
+                    GameListUiState(
+                        listOfGames = listOf(
+                            Game(id = "1", title = "Game 1"),
+                            Game(id = "2", title = "Game 2"),
+                            Game(id = "3", title = "Game 3"),
+                        ),
+                        query = "Search Query",
+                        isLoading = false,
+                        error = null
+                    )
+                )
+            },
             onSearch = {},
             onQueryChange = {},
-            searchResults = listOf("Game 1", "Game 2", "Game 3"),
             modifier = Modifier
         )
     }
@@ -44,15 +60,16 @@ fun GameListPreview() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GameListScreen(
-    query: String,
+    uiState: State<GameListUiState>,
     onSearch: (String) -> Unit,
     onQueryChange: (String) -> Unit,
-    searchResults: List<String>,
     modifier: Modifier = Modifier
 ) {
+    val uiState = uiState.value
+
     Column(modifier = modifier) {
         TextField(
-            value = query,
+            value = uiState.query,
             onValueChange = onQueryChange,
             modifier = Modifier
                 .fillMaxWidth()
@@ -65,11 +82,11 @@ fun GameListScreen(
                 )
             },
             trailingIcon = {
-                if (query.isNotEmpty()) {
+                if (uiState.query.isNotEmpty()) {
                     IconButton(onClick = { onQueryChange("") }) {
                         Icon(
                             imageVector = Icons.Default.Clear,
-                            contentDescription = "Clear Search"
+                            contentDescription = stringResource(R.string.clear_search_query)
                         )
                     }
                 }
@@ -78,16 +95,19 @@ fun GameListScreen(
             colors = SearchBarDefaults.inputFieldColors(),
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-            keyboardActions = KeyboardActions(onSearch = { onSearch(query) })
+            keyboardActions = KeyboardActions(onSearch = { onSearch(uiState.query) })
         )
 
         LazyColumn(
             modifier = Modifier.fillMaxWidth(),
             contentPadding = PaddingValues(horizontal = 16.dp)
         ) {
-            items(searchResults) { game ->
+            items(
+                count = uiState.listOfGames.size,
+                key = { index -> uiState.listOfGames[index].id }
+            ) { index ->
                 Text(
-                    text = game,
+                    text = uiState.listOfGames[index].title,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
             }
