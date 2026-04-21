@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">GameViewr</string>
     <string name="search_bar_placeholder">Search for games by title</string>
+    <string name="clear_search_query">Clear search query</string>
 </resources>
