@@ -50,9 +50,30 @@ fun GameListPreview() {
                 mutableStateOf(
                     GameListUiState(
                         listOfGames = listOf(
-                            Game(id = "1", title = "Game 1"),
-                            Game(id = "2", title = "Game 2"),
-                            Game(id = "3", title = "Game 3"),
+                            Game(
+                                id = "1",
+                                title = "Game 1",
+                                price = "1.03",
+                                imageUrl = "https://www.example.com/1/img.png",
+                                steamAppId = "123456",
+                                cheapestDealId = "123456"
+                            ),
+                            Game(
+                                id = "2",
+                                title = "Game 2",
+                                price = "1.03",
+                                imageUrl = "https://www.example.com/2/img.png",
+                                steamAppId = "123456",
+                                cheapestDealId = "123456"
+                            ),
+                            Game(
+                                id = "3",
+                                title = "Game 3",
+                                price = "1.03",
+                                imageUrl = "https://www.example.com/3/img.png",
+                                steamAppId = "123456",
+                                cheapestDealId = "123456"
+                            ),
                         ),
                         query = "Search Query",
                         isLoading = false,
