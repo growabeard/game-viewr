@@ -19,6 +19,15 @@ class GameListViewModelTest {
     }
 
     @Test
+    fun `ensure onSearch with empty query will not update the game list`() {
+        viewModel.onSearch("")
+
+        mainDispatcherRule.testDispatcher.scheduler.advanceUntilIdle()
+
+        assert(viewModel.uiState.value.listOfGames.isEmpty())
+    }
+
+    @Test
     fun `ensure onSearch will update the game list in state`() {
         viewModel.onSearch("some query")
 
