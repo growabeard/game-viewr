@@ -55,7 +55,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
@@ -319,55 +318,7 @@ fun GameListScreen(
 
     Column(modifier = modifier) {
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(top = 16.dp)
-                .clip(SearchBarDefaults.inputFieldShape)
-        ) {
-            TextField(
-                enabled = !uiState.isLoading,
-                value = uiState.query,
-                onValueChange = onQueryChange,
-                modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text(stringResource(R.string.search_bar_placeholder)) },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = null
-                    )
-                },
-                trailingIcon = {
-                    if (uiState.query.isNotEmpty()) {
-                        IconButton(onClick = onClearInputClick) {
-                            Icon(
-                                imageVector = Icons.Default.Clear,
-                                contentDescription = stringResource(R.string.clear_search_query)
-                            )
-                        }
-                    }
-                },
-                colors = SearchBarDefaults.inputFieldColors().copy(
-                    focusedIndicatorColor = Transparent,
-                    unfocusedIndicatorColor = Transparent,
-                    disabledIndicatorColor = Transparent
-                ),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                keyboardActions = KeyboardActions(onSearch = { onSearch(uiState.query) }),
-                isError = uiState.error != null
-            )
-
-            if (uiState.isLoading) {
-                LinearProgressIndicator(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .fillMaxWidth()
-                        .height(3.dp)
-                )
-            }
-        }
+        SearchBar(uiState, onQueryChange, onClearInputClick, onSearch)
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -376,6 +327,65 @@ fun GameListScreen(
 
     if (showBottomSheet) {
         GameDetailsBottomSheet(uiState.gameDetail, sheetState, onGameDetailsDismiss)
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun SearchBar(
+    uiState: GameListUiState,
+    onQueryChange: (String) -> Unit,
+    onClearInputClick: () -> Unit,
+    onSearch: (String) -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+            .padding(top = 16.dp)
+            .clip(SearchBarDefaults.inputFieldShape)
+    ) {
+        TextField(
+            enabled = !uiState.isLoading,
+            value = uiState.query,
+            onValueChange = onQueryChange,
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text(stringResource(R.string.search_bar_placeholder)) },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = null
+                )
+            },
+            trailingIcon = {
+                if (uiState.query.isNotEmpty()) {
+                    IconButton(onClick = onClearInputClick) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = stringResource(R.string.clear_search_query)
+                        )
+                    }
+                }
+            },
+            colors = SearchBarDefaults.inputFieldColors().copy(
+                focusedIndicatorColor = Transparent,
+                unfocusedIndicatorColor = Transparent,
+                disabledIndicatorColor = Transparent
+            ),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            keyboardActions = KeyboardActions(onSearch = { onSearch(uiState.query) }),
+            isError = uiState.error != null
+        )
+
+        if (uiState.isLoading) {
+            LinearProgressIndicator(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .height(3.dp)
+            )
+        }
     }
 }
 
@@ -400,15 +410,9 @@ private fun GameDetailsBottomSheet(
             AsyncImage(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .heightIn(max = 200.dp)
-                    .clip(
-                        RoundedCornerShape(
-                            bottomStart = 16.dp,
-                            bottomEnd = 16.dp
-                        )
-                    ),
+                    .heightIn(max = 300.dp, min = 100.dp),
                 model = gameInfo?.imageUrl,
-                contentScale = ContentScale.Inside,
+                contentScale = ContentScale.FillHeight,
                 contentDescription = null
             )
 
