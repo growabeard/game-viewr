@@ -9,4 +9,20 @@
     <string name="empty_error_description">Check your connection and try again.</string>
     <string name="empty_no_results_description">We couldn\'t find anything for \"%1$s\"</string>
     <string name="game_image_content_description">Game image for %1$s</string>
+    <string name="game_details_title">"Title:"</string>
+    <string name="game_details_rating">"Rating:"</string>
+    <string name="game_details_release_date">"Release Date:"</string>
+    <string name="game_details_publisher">"Publisher:"</string>
+    <string name="game_details_sale_price">"Sale Price:"</string>
+    <string name="game_details_retail_price">"Retail Price:"</string>
+    <string name="game_details_steam_rating_text">"Steam Rating:"</string>
+    <string name="game_details_steam_rating_percent">"Steam Rating:"</string>
+    <string name="game_details_steam_rating_count">"Steam Rating Count:"</string>
+    <string name="game_details_metacritic_score">"Metacritic Score:"</string>
+    <string name="game_details_metacritic_link">"Metacritic Link:"</string>
+    <string name="game_details_rating_label_steam">Steam</string>
+    <string name="game_details_rating_label_metacritic">Metacritic</string>
+    <string name="game_details_rating_subtitle_score">Score</string>
+    <string name="game_list_price_prefix">From</string>
+    <string name="game_list_price_format">$%s</string>
 </resources>

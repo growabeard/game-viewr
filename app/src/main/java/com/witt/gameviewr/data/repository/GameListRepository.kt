@@ -1,7 +1,8 @@
 package com.witt.gameviewr.data.repository
 
-import com.witt.gameviewr.data.service.GameApiService
 import com.witt.gameviewr.data.model.Game
+import com.witt.gameviewr.data.model.GameDetails
+import com.witt.gameviewr.data.service.GameApiService
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -13,7 +14,7 @@ class GameListRepository @Inject constructor(
         return apiService.getGames(title)
     }
 
-    suspend fun getDeals(): List<Game> {
-        return apiService.getDeals()
+    suspend fun getGameDetails(id: String): GameDetails {
+        return apiService.getDeals(id)
     }
 }
