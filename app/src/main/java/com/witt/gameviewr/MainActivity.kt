@@ -32,6 +32,8 @@ class MainActivity : ComponentActivity() {
                         onSearch = viewModel::onSearch,
                         onQueryChange = viewModel::onQueryChange,
                         onClearInputClick = viewModel::onClearInputClick,
+                        onGameDetailsDismiss = viewModel::onGameDetailsDismiss,
+                        onGameClick = viewModel::onGameClick,
                         modifier = Modifier.padding(innerPadding),
                     )
                 }
