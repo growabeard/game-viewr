@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">GameViewr</string>
+    <string name="deals_tab_title">Deals</string>
+    <string name="search_tab_title">Search</string>
     <string name="search_bar_placeholder">Search for games by title</string>
     <string name="clear_search_query">Clear search query</string>
     <string name="empty_before_search_title">Search for Games</string>
