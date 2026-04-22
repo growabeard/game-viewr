@@ -1,11 +1,14 @@
 package com.witt.gameviewr.ui
 
+import android.util.Log
 import com.witt.gameviewr.MainDispatcherRule
 import com.witt.gameviewr.data.model.Game
 import com.witt.gameviewr.data.repository.GameListRepository
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
+import io.mockk.mockkStatic
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -24,6 +27,11 @@ class GameListViewModelTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
+
+        mockkStatic(Log::class)
+
+        every { Log.d(any(), any()) } returns 0
+        every { Log.e(any(), any(), any()) } returns 0
 
         viewModel = GameListViewModel(repository)
     }
