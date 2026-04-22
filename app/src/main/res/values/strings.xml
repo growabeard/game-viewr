@@ -23,4 +23,6 @@
     <string name="game_details_rating_label_steam">Steam</string>
     <string name="game_details_rating_label_metacritic">Metacritic</string>
     <string name="game_details_rating_subtitle_score">Score</string>
+    <string name="game_list_price_prefix">From</string>
+    <string name="game_list_price_format">$%s</string>
 </resources>

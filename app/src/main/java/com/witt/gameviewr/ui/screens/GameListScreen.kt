@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -53,6 +54,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
@@ -496,7 +498,12 @@ private fun RatingSection(gameInfo: GameInfo?) {
 }
 
 @Composable
-private fun RatingBadge(label: String, score: String, subtitle: String, modifier: Modifier = Modifier) {
+private fun RatingBadge(
+    label: String,
+    score: String,
+    subtitle: String,
+    modifier: Modifier = Modifier
+) {
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
@@ -510,8 +517,16 @@ private fun RatingBadge(label: String, score: String, subtitle: String, modifier
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = label, style = MaterialTheme.typography.labelSmall)
-            Text(text = score, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.ExtraBold)
-            Text(text = subtitle, style = MaterialTheme.typography.labelSmall, textAlign = TextAlign.Center)
+            Text(
+                text = score,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.ExtraBold
+            )
+            Text(
+                text = subtitle,
+                style = MaterialTheme.typography.labelSmall,
+                textAlign = TextAlign.Center
+            )
         }
     }
 }
@@ -577,32 +592,54 @@ private fun GameList(
                     count = uiState.listOfGames.size,
                     key = { index -> uiState.listOfGames[index].id }
                 ) { index ->
-                    val currentGame = uiState.listOfGames[index]
-                    Card(onClick = { onGameClick(currentGame.cheapestDealId) }) {
-                        Row(modifier = Modifier.padding(16.dp)) {
-                            Text(
-                                text = currentGame.title,
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .align(Alignment.CenterVertically),
-                                style = MaterialTheme.typography.titleLarge
-                            )
-                            AsyncImage(
-                                modifier = Modifier
-                                    .size(128.dp),
-                                model = currentGame.imageUrl,
-                                contentDescription = stringResource(
-                                    R.string.game_image_content_description,
-                                    currentGame.title
-                                ),
-                            )
-                        }
-                    }
+                    GameItem(
+                        game = uiState.listOfGames[index],
+                        onClick = { onGameClick(uiState.listOfGames[index].cheapestDealId) }
+                    )
                     if (index < uiState.listOfGames.size - 1) {
-                        Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(12.dp))
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun GameItem(
+    game: Game,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        onClick = onClick,
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(12.dp)
+                .height(72.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            AsyncImage(
+                model = game.imageUrl,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(width = 120.dp, height = 72.dp)
+                    .clip(RoundedCornerShape(8.dp))
+            )
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Text(
+                text = game.title,
+                style = MaterialTheme.typography.titleMedium,
+            )
         }
     }
 }
