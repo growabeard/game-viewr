@@ -1,5 +1,6 @@
 package com.witt.gameviewr.ui.screens
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -8,26 +9,35 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -37,13 +47,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color.Companion.Transparent
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.witt.gameviewr.R
 import com.witt.gameviewr.data.model.Game
+import com.witt.gameviewr.data.model.GameDetails
+import com.witt.gameviewr.data.model.GameInfo
 import com.witt.gameviewr.ui.GameListUiState
 import com.witt.gameviewr.ui.theme.GameViewrTheme
 
@@ -90,6 +106,61 @@ fun GameListScreenPreview() {
             onSearch = {},
             onQueryChange = {},
             onClearInputClick = {},
+            onGameDetailsDismiss = {},
+            onGameClick = {},
+            modifier = Modifier
+        )
+    }
+}
+
+@Preview(showSystemUi = true)
+@Composable
+fun GameListScreenDetailsPreview() {
+    GameViewrTheme {
+        GameListScreen(
+            uiState = remember {
+                mutableStateOf(
+                    GameListUiState(
+                        listOfGames = listOf(
+                            Game(
+                                id = "1",
+                                title = "Game 1",
+                                price = "1.03",
+                                imageUrl = "https://shared.fastly.steamstatic.com/store_item_assets/steam/app/1404210/capsule_231x87.jpg?t=1759502979",
+                                steamAppId = "123456",
+                                cheapestDealId = "123456"
+                            )
+                        ),
+                        gameDetail = GameDetails(
+                            gameInfo = GameInfo(
+                                name = "Game 1",
+                                salePrice = "1.03",
+                                steamRatingText = "Very Positive",
+                                id = "1",
+                                storeID = "1234",
+                                steamAppID = "12345",
+                                retailPrice = "15.90",
+                                steamRatingPercent = "80",
+                                steamRatingCount = "6476",
+                                metacriticScore = "80",
+                                metacriticLink = null,
+                                releaseDate = 1234567890,
+                                publisher = "My publisher",
+                                steamworks = "1",
+                                imageUrl = "https://cdn.fanatical.com/production/product/400x225/105f34ca-7757-47ad-953e-7df7f016741e.jpeg",
+                            )
+                        ),
+                        query = "Search Query",
+                        isLoading = false,
+                        error = null
+                    )
+                )
+            },
+            onSearch = {},
+            onQueryChange = {},
+            onClearInputClick = {},
+            onGameDetailsDismiss = {},
+            onGameClick = {},
             modifier = Modifier
         )
     }
@@ -114,6 +185,8 @@ fun GameListScreenInitialPreview() {
             onSearch = {},
             onQueryChange = {},
             onClearInputClick = {},
+            onGameDetailsDismiss = {},
+            onGameClick = {},
             modifier = Modifier
         )
     }
@@ -137,6 +210,8 @@ fun GameListScreenLoadingPreview() {
             onSearch = {},
             onQueryChange = {},
             onClearInputClick = {},
+            onGameDetailsDismiss = {},
+            onGameClick = {},
             modifier = Modifier
         )
     }
@@ -160,6 +235,8 @@ fun GameListScreenErrorPreview() {
             onSearch = {},
             onQueryChange = {},
             onClearInputClick = {},
+            onGameDetailsDismiss = {},
+            onGameClick = {},
             modifier = Modifier
         )
     }
@@ -183,6 +260,8 @@ fun GameListScreenErrorEmptyPreview() {
             onSearch = {},
             onQueryChange = {},
             onClearInputClick = {},
+            onGameDetailsDismiss = {},
+            onGameClick = {},
             modifier = Modifier
         )
     }
@@ -206,6 +285,8 @@ fun GameListScreenErrorLoadingPreview() {
             onSearch = {},
             onQueryChange = {},
             onClearInputClick = {},
+            onGameDetailsDismiss = {},
+            onGameClick = {},
             modifier = Modifier
         )
     }
@@ -218,10 +299,14 @@ fun GameListScreen(
     onSearch: (String) -> Unit,
     onQueryChange: (String) -> Unit,
     onClearInputClick: () -> Unit,
+    onGameDetailsDismiss: () -> Unit,
+    onGameClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val uiState = uiState.value
     val listState = rememberLazyListState()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val showBottomSheet = uiState.gameDetail != null
 
     LaunchedEffect(uiState.listOfGames) {
         if (uiState.listOfGames.isNotEmpty()) {
@@ -239,6 +324,7 @@ fun GameListScreen(
                 .clip(SearchBarDefaults.inputFieldShape)
         ) {
             TextField(
+                enabled = !uiState.isLoading,
                 value = uiState.query,
                 onValueChange = onQueryChange,
                 modifier = Modifier.fillMaxWidth(),
@@ -282,12 +368,13 @@ fun GameListScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        GameList(uiState, listState)
+        GameList(onGameClick, uiState, listState)
     }
 }
 
 @Composable
 private fun GameList(
+    onGameClick: (String) -> Unit,
     uiState: GameListUiState,
     listState: LazyListState
 ) {
@@ -316,30 +403,29 @@ private fun GameList(
                     count = uiState.listOfGames.size,
                     key = { index -> uiState.listOfGames[index].id }
                 ) { index ->
-                    Row {
-                        Text(
-                            text = uiState.listOfGames[index].title,
-                            modifier = Modifier
-                                .padding(vertical = 8.dp)
-                                .weight(1f)
-                                .align(Alignment.CenterVertically),
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                        AsyncImage(
-                            modifier = Modifier
-                                .padding(vertical = 8.dp)
-                                .size(128.dp),
-                            model = uiState.listOfGames[index].imageUrl,
-                            contentDescription = stringResource(
-                                R.string.game_image_content_description,
-                                uiState.listOfGames[index].title
-                            ),
-                        )
+                    val currentGame = uiState.listOfGames[index]
+                    Card(onClick = { onGameClick(currentGame.cheapestDealId) }) {
+                        Row(modifier = Modifier.padding(16.dp)) {
+                            Text(
+                                text = currentGame.title,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .align(Alignment.CenterVertically),
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                            AsyncImage(
+                                modifier = Modifier
+                                    .size(128.dp),
+                                model = currentGame.imageUrl,
+                                contentDescription = stringResource(
+                                    R.string.game_image_content_description,
+                                    currentGame.title
+                                ),
+                            )
+                        }
                     }
                     if (index < uiState.listOfGames.size - 1) {
-                        Spacer(modifier = Modifier.height(8.dp))
-                        HorizontalDivider()
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(16.dp))
                     }
                 }
             }
