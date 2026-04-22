@@ -336,15 +336,15 @@ fun EmptyState(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val title = when {
-            !hasSearched -> "Search for Games"
-            error != null -> "Something went wrong"
-            else -> "No games found"
+            !hasSearched -> stringResource(R.string.empty_before_search_title)
+            error != null -> stringResource(R.string.empty_error_title)
+            else -> stringResource(R.string.empty_no_results_title)
         }
 
         val description = when {
-            !hasSearched -> "Enter a game title above to see detailed information."
-            error != null -> "Check your connection and try again."
-            else -> "We couldn't find anything for \"$query\""
+            !hasSearched -> stringResource(R.string.empty_before_search_description)
+            error != null -> stringResource(R.string.empty_error_description)
+            else -> stringResource(R.string.empty_no_results_description, query)
         }
 
         Text(
