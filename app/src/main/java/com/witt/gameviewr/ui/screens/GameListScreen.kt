@@ -3,9 +3,11 @@ package com.witt.gameviewr.ui.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -28,7 +30,6 @@ import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -422,11 +423,7 @@ private fun GameDetailsBottomSheet(
 
                 PricingSection(gameInfo)
 
-                HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
-
                 RatingSection(gameInfo)
-
-                HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
 
                 DetailRow(
                     label = stringResource(R.string.game_details_release_date),
@@ -475,15 +472,22 @@ private fun PricingSection(gameInfo: GameInfo?) {
 @Composable
 private fun RatingSection(gameInfo: GameInfo?) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Max)
+            .padding(vertical = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        if (gameInfo?.steamRatingPercent != null) {
+        if (gameInfo?.steamRatingPercent != null && gameInfo.steamRatingPercent != "0") {
             RatingBadge(
                 label = stringResource(R.string.game_details_rating_label_steam),
                 score = "${gameInfo.steamRatingPercent}%",
-                subtitle = "${gameInfo.steamRatingText} (${gameInfo.steamRatingCount})",
-                modifier = Modifier.weight(1f)
+                subtitle = if (gameInfo.steamRatingText != null && gameInfo.steamRatingCount != "0") {
+                    "${gameInfo.steamRatingText} (${gameInfo.steamRatingCount})"
+                } else {
+                    ""
+                },
+                modifier = Modifier.weight(1f).fillMaxHeight()
             )
         }
         if (gameInfo?.metacriticScore != null && gameInfo.metacriticScore != "0") {
@@ -491,7 +495,7 @@ private fun RatingSection(gameInfo: GameInfo?) {
                 label = stringResource(R.string.game_details_rating_label_metacritic),
                 score = gameInfo.metacriticScore,
                 subtitle = stringResource(R.string.game_details_rating_subtitle_score),
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f).fillMaxHeight()
             )
         }
     }
@@ -513,8 +517,10 @@ private fun RatingBadge(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .fillMaxHeight()
                 .padding(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             Text(text = label, style = MaterialTheme.typography.labelSmall)
             Text(
