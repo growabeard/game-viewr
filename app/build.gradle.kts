@@ -59,6 +59,8 @@ dependencies {
     implementation(libs.retrofit.converter.kotlinx.serialization)
     implementation(libs.okhttp.logging.interceptor)
     implementation(libs.hilt.android)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network)
     ksp(libs.hilt.compiler)
     testImplementation(libs.mockk)
     testImplementation(libs.junit)

@@ -2,4 +2,11 @@
     <string name="app_name">GameViewr</string>
     <string name="search_bar_placeholder">Search for games by title</string>
     <string name="clear_search_query">Clear search query</string>
+    <string name="empty_before_search_title">Search for Games</string>
+    <string name="empty_error_title">Something went wrong</string>
+    <string name="empty_no_results_title">No games found</string>
+    <string name="empty_before_search_description">Enter a game title above to see detailed information.</string>
+    <string name="empty_error_description">Check your connection and try again.</string>
+    <string name="empty_no_results_description">We couldn\'t find anything for \"%1$s\"</string>
+    <string name="game_image_content_description">Game image for %1$s</string>
 </resources>
