@@ -1,8 +1,8 @@
 package com.witt.gameviewr.data.repository
 
-import com.witt.gameviewr.data.service.GameApiService
 import com.witt.gameviewr.data.model.Game
 import com.witt.gameviewr.data.model.GameDetails
+import com.witt.gameviewr.data.service.GameApiService
 import javax.inject.Inject
 import javax.inject.Singleton
 

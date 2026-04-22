@@ -1,11 +1,7 @@
 package com.witt.gameviewr.data.model
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import java.time.LocalDate
-import java.util.Date
 
 @Serializable
 data class GameDetails(
