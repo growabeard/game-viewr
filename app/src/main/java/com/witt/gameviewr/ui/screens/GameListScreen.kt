@@ -370,6 +370,180 @@ fun GameListScreen(
 
         GameList(onGameClick, uiState, listState)
     }
+
+    if (showBottomSheet) {
+        GameDetailsBottomSheet(uiState.gameDetail, sheetState, onGameDetailsDismiss)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun GameDetailsBottomSheet(
+    gameDetail: GameDetails,
+    sheetState: SheetState,
+    onGameDetailsDismiss: () -> Unit
+) {
+    ModalBottomSheet(
+        onDismissRequest = onGameDetailsDismiss,
+        sheetState = sheetState,
+    ) {
+        val gameInfo = gameDetail.gameInfo
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .padding(bottom = 32.dp)
+        ) {
+            AsyncImage(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .heightIn(max = 200.dp)
+                    .clip(
+                        RoundedCornerShape(
+                            bottomStart = 16.dp,
+                            bottomEnd = 16.dp
+                        )
+                    ),
+                model = gameInfo?.imageUrl,
+                contentScale = ContentScale.Inside,
+                contentDescription = null
+            )
+
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = gameInfo?.name ?: "",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                PricingSection(gameInfo)
+
+                HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+
+                RatingSection(gameInfo)
+
+                HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+
+                DetailRow(
+                    label = stringResource(R.string.game_details_release_date),
+                    value = gameInfo?.formattedReleaseDate
+                )
+                DetailRow(
+                    label = stringResource(R.string.game_details_publisher),
+                    value = gameInfo?.publisher
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun PricingSection(gameInfo: GameInfo?) {
+    val sale = gameInfo?.salePrice
+    val retail = gameInfo?.retailPrice
+    if (sale == null || retail == null) return
+
+    val isOnSale = sale != retail
+
+    Row(
+        verticalAlignment = Alignment.Bottom,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            text = "$$sale",
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            color = if (isOnSale) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+        )
+        if (isOnSale) {
+            Text(
+                text = "$$retail",
+                style = MaterialTheme.typography.titleMedium.copy(
+                    textDecoration = TextDecoration.LineThrough
+                ),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun RatingSection(gameInfo: GameInfo?) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        if (gameInfo?.steamRatingPercent != null) {
+            RatingBadge(
+                label = stringResource(R.string.game_details_rating_label_steam),
+                score = "${gameInfo.steamRatingPercent}%",
+                subtitle = "${gameInfo.steamRatingText} (${gameInfo.steamRatingCount})",
+                modifier = Modifier.weight(1f)
+            )
+        }
+        if (gameInfo?.metacriticScore != null && gameInfo.metacriticScore != "0") {
+            RatingBadge(
+                label = stringResource(R.string.game_details_rating_label_metacritic),
+                score = gameInfo.metacriticScore,
+                subtitle = stringResource(R.string.game_details_rating_subtitle_score),
+                modifier = Modifier.weight(1f)
+            )
+        }
+    }
+}
+
+@Composable
+private fun RatingBadge(label: String, score: String, subtitle: String, modifier: Modifier = Modifier) {
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.4f)
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(text = label, style = MaterialTheme.typography.labelSmall)
+            Text(text = score, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.ExtraBold)
+            Text(text = subtitle, style = MaterialTheme.typography.labelSmall, textAlign = TextAlign.Center)
+        }
+    }
+}
+
+@Composable
+private fun DetailRow(label: String, value: String?) {
+    val isValidValue = !value.isNullOrEmpty() && value != "N/A" && value != "0"
+
+    if (isValidValue) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                text = value,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.End,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 16.dp)
+            )
+        }
+    }
 }
 
 @Composable
