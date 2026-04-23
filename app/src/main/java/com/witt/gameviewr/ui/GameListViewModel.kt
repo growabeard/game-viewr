@@ -58,7 +58,7 @@ class GameListViewModel @Inject constructor(private val repository: GameListRepo
 
     fun onQueryChange(newQuery: String) {
         Log.d(TAG, "onQueryChange: $newQuery")
-        _uiState.value = _uiState.value.copy(query = newQuery)
+        _uiState.update { it.copy(query = newQuery) }
     }
 
     companion object {
