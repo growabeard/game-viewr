@@ -3,7 +3,7 @@ package com.witt.gameviewr.ui
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.witt.gameviewr.data.model.Game
+import com.witt.gameviewr.data.model.Deal
 import com.witt.gameviewr.data.model.GameDetails
 import com.witt.gameviewr.data.repository.GameListRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,7 +29,7 @@ class GameListViewModel @Inject constructor(private val repository: GameListRepo
             try {
                 _uiState.update { it.copy(isLoading = true, error = null, hasSearched = true) }
 
-                val result = repository.getGames(query)
+                val result = repository.getDeals(title = query)
                 Log.d(TAG, "onSearch: $result")
 
                 _uiState.update {
@@ -100,7 +100,7 @@ class GameListViewModel @Inject constructor(private val repository: GameListRepo
 
 data class GameListUiState(
     val query: String = "",
-    val listOfGames: List<Game> = emptyList(),
+    val listOfGames: List<Deal> = emptyList(),
     val gameDetail: GameDetails? = null,
     val isLoading: Boolean = false,
     val error: String? = null,

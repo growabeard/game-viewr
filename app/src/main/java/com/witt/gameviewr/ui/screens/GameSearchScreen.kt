@@ -34,7 +34,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.witt.gameviewr.R
-import com.witt.gameviewr.data.model.Game
+import com.witt.gameviewr.data.model.Deal
 import com.witt.gameviewr.data.model.GameDetails
 import com.witt.gameviewr.data.model.GameInfo
 import com.witt.gameviewr.ui.GameListUiState
@@ -51,29 +51,68 @@ fun GameListScreenPreview() {
                 mutableStateOf(
                     GameListUiState(
                         listOfGames = listOf(
-                            Game(
-                                id = "1",
-                                title = "Game 1",
-                                price = "1.03",
-                                imageUrl = "https://shared.fastly.steamstatic.com/store_item_assets/steam/app/1404210/capsule_231x87.jpg?t=1759502979",
-                                steamAppId = "123456",
-                                cheapestDealId = "123456"
+                            Deal(
+                                internalName = "DEUSEXHUMANREVOLUTIONDIRECTORSCUT",
+                                title = "Deus Ex: Human Revolution - Director's Cut",
+                                metacriticLink = "/game/pc/deus-ex-human-revolution---directors-cut",
+                                dealID = "HhzMJAgQYGZ%2B%2BFPpBG%2BRFcuUQZJO3KXvlnyYYGwGUfU%3D",
+                                storeID = "1",
+                                id = "102249",
+                                salePrice = "2.99",
+                                retailPrice = "19.99",
+                                isOnSale = "1",
+                                savings = "85.042521",
+                                metacriticScore = "91",
+                                steamRatingText = "Very Positive",
+                                steamRatingPercent = "92",
+                                steamRatingCount = "17993",
+                                steamAppID = "238010",
+                                releaseDate = 1382400000,
+                                lastChange = 1621536418,
+                                dealRating = "9.6",
+                                imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/238010/capsule_sm_120.jpg?t=1619788192"
                             ),
-                            Game(
-                                id = "2",
-                                title = "Game 2",
-                                price = "1.03",
-                                imageUrl = "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/541720/capsule_231x87.jpg?t=1690508086",
-                                steamAppId = "123456",
-                                cheapestDealId = "123456"
+                            Deal(
+                                internalName = "THIEFDEADLYSHADOWS",
+                                title = "Thief: Deadly Shadows",
+                                metacriticLink = "/game/pc/thief-deadly-shadows",
+                                dealID = "EX0oH20b7A1H2YiVjvVx5A0HH%2F4etw3x%2F6YMGVPpKbA%3D",
+                                storeID = "1",
+                                id = "396",
+                                salePrice = "0.98",
+                                retailPrice = "8.99",
+                                isOnSale = "1",
+                                savings = "89.098999",
+                                metacriticScore = "85",
+                                steamRatingText = "Very Positive",
+                                steamRatingPercent = "81",
+                                steamRatingCount = "1670",
+                                steamAppID = "6980",
+                                releaseDate = 1085443200,
+                                lastChange = 1621540561,
+                                dealRating = "9.4",
+                                imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/6980/capsule_sm_120.jpg?t=1592493801"
                             ),
-                            Game(
-                                id = "3",
-                                title = "Game 3",
-                                price = "1.03",
-                                imageUrl = "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2668510/c9c0dd50da5b3543c74beb11b6c806fb9fd88a8c/capsule_231x87.jpg?t=1741118459",
-                                steamAppId = "123456",
-                                cheapestDealId = "123456"
+                            Deal(
+                                internalName = "JUSTCAUSE2",
+                                title = "Just Cause 2",
+                                metacriticLink = "/game/pc/just-cause-2",
+                                dealID = "z4El8C19yCEHrk1%2ByEedebThQVbblI7H0Z%2BAmxgZiS8%3D",
+                                storeID = "1",
+                                id = "180",
+                                salePrice = "1.49",
+                                retailPrice = "14.99",
+                                isOnSale = "1",
+                                savings = "90.060040",
+                                metacriticScore = "84",
+                                steamRatingText = "Very Positive",
+                                steamRatingPercent = "90",
+                                steamRatingCount = "35296",
+                                steamAppID = "8190",
+                                releaseDate = 1269302400,
+                                lastChange = 1621536477,
+                                dealRating = "9.4",
+                                imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/8190/capsule_sm_120.jpg?t=1593180404"
                             ),
                         ),
                         query = "Search Query",
@@ -101,13 +140,26 @@ fun GameListScreenDetailsPreview() {
                 mutableStateOf(
                     GameListUiState(
                         listOfGames = listOf(
-                            Game(
-                                id = "1",
-                                title = "Game 1",
-                                price = "1.03",
-                                imageUrl = "https://shared.fastly.steamstatic.com/store_item_assets/steam/app/1404210/capsule_231x87.jpg?t=1759502979",
-                                steamAppId = "123456",
-                                cheapestDealId = "123456"
+                            Deal(
+                                internalName = "DEUSEXHUMANREVOLUTIONDIRECTORSCUT",
+                                title = "Deus Ex: Human Revolution - Director's Cut",
+                                metacriticLink = "/game/pc/deus-ex-human-revolution---directors-cut",
+                                dealID = "HhzMJAgQYGZ%2B%2BFPpBG%2BRFcuUQZJO3KXvlnyYYGwGUfU%3D",
+                                storeID = "1",
+                                id = "102249",
+                                salePrice = "2.99",
+                                retailPrice = "19.99",
+                                isOnSale = "1",
+                                savings = "85.042521",
+                                metacriticScore = "91",
+                                steamRatingText = "Very Positive",
+                                steamRatingPercent = "92",
+                                steamRatingCount = "17993",
+                                steamAppID = "238010",
+                                releaseDate = 1382400000,
+                                lastChange = 1621536418,
+                                dealRating = "9.6",
+                                imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/238010/capsule_sm_120.jpg?t=1619788192"
                             )
                         ),
                         gameDetail = GameDetails(

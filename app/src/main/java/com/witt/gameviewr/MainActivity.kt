@@ -8,7 +8,6 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Icon
@@ -38,7 +37,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             GameViewrTheme {
-                var currentDestination by remember { mutableStateOf(HomeDestination.Search) }
+                var currentDestination by remember { mutableStateOf(HomeDestination.Deals) }
 
                 NavigationSuiteScaffold(
                     navigationSuiteItems = {
@@ -80,11 +79,8 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            HomeDestination.Deals -> {
-                                Text(
-                                    text = "Watchlist coming soon!",
-                                    modifier = Modifier.padding(innerPadding)
-                                )
+                            HomeDestination.Deals -> { //TODO remove this
+                                Text("We probably don't need this anymore..")
                             }
                         }
                     }

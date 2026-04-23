@@ -30,7 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.witt.gameviewr.R
-import com.witt.gameviewr.data.model.SearchGame
+import com.witt.gameviewr.data.model.Deal
 import com.witt.gameviewr.ui.GameListUiState
 
 @Composable
@@ -66,7 +66,7 @@ fun GameList(
                 ) { index ->
                     GameItem(
                         game = uiState.listOfGames[index],
-                        onClick = { onGameClick(uiState.listOfGames[index].cheapestDealId) }
+                        onClick = { onGameClick(uiState.listOfGames[index].dealID) }
                     )
                     if (index < uiState.listOfGames.size - 1) {
                         Spacer(modifier = Modifier.height(12.dp))
@@ -79,7 +79,7 @@ fun GameList(
 
 @Composable
 private fun GameItem(
-    game: SearchGame,
+    game: Deal,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
