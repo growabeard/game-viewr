@@ -33,7 +33,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
+import androidx.paging.LoadStates
 import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.witt.gameviewr.R
 import com.witt.gameviewr.data.model.Game
@@ -43,6 +46,7 @@ import com.witt.gameviewr.ui.components.GameList
 import com.witt.gameviewr.ui.theme.GameViewrTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import kotlin.collections.emptyList
 
 @Preview(showSystemUi = true)
 @Composable
@@ -118,8 +122,6 @@ fun GameListScreenPreview() {
                 mutableStateOf(
                     GameListUiState(
                         query = "Search Query",
-                        isLoading = false,
-                        error = null,
                         hasSearched = true
                     )
                 )
@@ -188,8 +190,6 @@ fun GameListScreenDetailsPreview() {
                             imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/238010/capsule_sm_120.jpg?t=1619788192"
                         ),
                         query = "Search Query",
-                        isLoading = false,
-                        error = null,
                         hasSearched = true
                     )
                 )
@@ -214,9 +214,7 @@ fun GameListScreenInitialPreview() {
                 mutableStateOf(
                     GameListUiState(
                         query = "",
-                        isLoading = false,
                         hasSearched = false,
-                        error = null
                     )
                 )
             },
@@ -240,39 +238,20 @@ fun GameListScreenLoadingPreview() {
                 mutableStateOf(
                     GameListUiState(
                         query = "Loading query",
-                        isLoading = true,
-                        error = null,
                         hasSearched = true
                     )
                 )
             },
-            gamesFlow = flowOf(PagingData.empty()),
-            onSearch = {},
-            onQueryChange = {},
-            onClearInputClick = {},
-            onGameDetailsDismiss = {},
-            onGameClick = {},
-            modifier = Modifier
-        )
-    }
-}
-
-@Preview(showSystemUi = true)
-@Composable
-fun GameListScreenErrorPreview() {
-    GameViewrTheme {
-        GameListScreen(
-            uiState = remember {
-                mutableStateOf(
-                    GameListUiState(
-                        query = "Loading query",
-                        isLoading = false,
-                        error = "There was an error",
-                        hasSearched = true
+            gamesFlow = flowOf(
+                PagingData.from(
+                    data = emptyList(),
+                    sourceLoadStates = LoadStates(
+                        refresh = LoadState.Loading,
+                        prepend = LoadState.NotLoading(false),
+                        append = LoadState.NotLoading(false)
                     )
                 )
-            },
-            gamesFlow = flowOf(PagingData.empty()),
+            ),
             onSearch = {},
             onQueryChange = {},
             onClearInputClick = {},
@@ -282,59 +261,6 @@ fun GameListScreenErrorPreview() {
         )
     }
 }
-
-@Preview(showSystemUi = true)
-@Composable
-fun GameListScreenErrorEmptyPreview() {
-    GameViewrTheme {
-        GameListScreen(
-            uiState = remember {
-                mutableStateOf(
-                    GameListUiState(
-                        query = "",
-                        isLoading = false,
-                        error = "There was an error",
-                        hasSearched = false
-                    )
-                )
-            },
-            gamesFlow = flowOf(PagingData.empty()),
-            onSearch = {},
-            onQueryChange = {},
-            onClearInputClick = {},
-            onGameDetailsDismiss = {},
-            onGameClick = {},
-            modifier = Modifier
-        )
-    }
-}
-
-@Preview(showSystemUi = true)
-@Composable
-fun GameListScreenErrorLoadingPreview() {
-    GameViewrTheme {
-        GameListScreen(
-            uiState = remember {
-                mutableStateOf(
-                    GameListUiState(
-                        query = "",
-                        isLoading = true,
-                        error = "There was an error",
-                        hasSearched = false
-                    )
-                )
-            },
-            gamesFlow = flowOf(PagingData.empty()),
-            onSearch = {},
-            onQueryChange = {},
-            onClearInputClick = {},
-            onGameDetailsDismiss = {},
-            onGameClick = {},
-            modifier = Modifier
-        )
-    }
-}
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -362,7 +288,7 @@ fun GameListScreen(
 
     Column(modifier = modifier) {
 
-        SearchBar(uiStateValue, onQueryChange, onClearInputClick, onSearch)
+        SearchBar(games, uiStateValue, onQueryChange, onClearInputClick, onSearch)
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -383,6 +309,7 @@ fun GameListScreen(
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun SearchBar(
+    games: LazyPagingItems<Game>,
     uiState: GameListUiState,
     onQueryChange: (String) -> Unit,
     onClearInputClick: () -> Unit,
@@ -396,7 +323,7 @@ private fun SearchBar(
             .clip(SearchBarDefaults.inputFieldShape)
     ) {
         TextField(
-            enabled = !uiState.isLoading,
+            enabled = games.loadState.refresh !is LoadState.Loading,
             value = uiState.query,
             onValueChange = onQueryChange,
             modifier = Modifier.fillMaxWidth(),
@@ -424,11 +351,10 @@ private fun SearchBar(
             ),
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-            keyboardActions = KeyboardActions(onSearch = { onSearch(uiState.query) }),
-            isError = uiState.error != null
+            keyboardActions = KeyboardActions(onSearch = { onSearch(uiState.query) })
         )
 
-        if (uiState.isLoading) {
+        if (games.loadState.refresh is LoadState.Loading) {
             LinearProgressIndicator(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
