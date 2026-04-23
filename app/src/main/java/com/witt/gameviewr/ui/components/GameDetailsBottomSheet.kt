@@ -30,14 +30,13 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.witt.gameviewr.R
-import com.witt.gameviewr.data.model.GameDetails
-import com.witt.gameviewr.data.model.GameInfo
+import com.witt.gameviewr.data.model.Deal
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GameDetailsBottomSheet(
-    gameDetail: GameDetails,
+    gameInfo: Deal,
     sheetState: SheetState,
     onGameDetailsDismiss: () -> Unit
 ) {
@@ -45,7 +44,6 @@ fun GameDetailsBottomSheet(
         onDismissRequest = onGameDetailsDismiss,
         sheetState = sheetState,
     ) {
-        val gameInfo = gameDetail.gameInfo
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -56,14 +54,14 @@ fun GameDetailsBottomSheet(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .heightIn(max = 300.dp, min = 100.dp),
-                model = gameInfo?.imageUrl,
+                model = gameInfo.imageUrl,
                 contentScale = ContentScale.FillHeight,
                 contentDescription = null
             )
 
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = gameInfo?.name ?: "",
+                    text = gameInfo.title,
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
@@ -76,11 +74,7 @@ fun GameDetailsBottomSheet(
 
                 DetailRow(
                     label = stringResource(R.string.game_details_release_date),
-                    value = gameInfo?.formattedReleaseDate
-                )
-                DetailRow(
-                    label = stringResource(R.string.game_details_publisher),
-                    value = gameInfo?.publisher
+                    value = gameInfo.formattedReleaseDate
                 )
             }
         }
@@ -88,16 +82,16 @@ fun GameDetailsBottomSheet(
 }
 
 @Composable
-private fun PricingSection(gameInfo: GameInfo?) {
-    val sale = gameInfo?.salePrice
-    val retail = gameInfo?.retailPrice
-    if (sale == null || retail == null) return
+private fun PricingSection(gameInfo: Deal) {
+    val sale = gameInfo.salePrice
+    val retail = gameInfo.retailPrice
 
     val isOnSale = sale != retail
 
     Row(
+        modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.Bottom,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
     ) {
         Text(
             text = "$$sale",
@@ -119,7 +113,7 @@ private fun PricingSection(gameInfo: GameInfo?) {
 }
 
 @Composable
-private fun RatingSection(gameInfo: GameInfo?) {
+private fun RatingSection(gameInfo: Deal) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -127,7 +121,7 @@ private fun RatingSection(gameInfo: GameInfo?) {
             .padding(vertical = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        if (gameInfo?.steamRatingPercent != null && gameInfo.steamRatingPercent != "0") {
+        if (gameInfo.steamRatingPercent != null && gameInfo.steamRatingPercent != "0") {
             RatingBadge(
                 label = stringResource(R.string.game_details_rating_label_steam),
                 score = "${gameInfo.steamRatingPercent}%",
@@ -136,15 +130,19 @@ private fun RatingSection(gameInfo: GameInfo?) {
                 } else {
                     ""
                 },
-                modifier = Modifier.weight(1f).fillMaxHeight()
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
             )
         }
-        if (gameInfo?.metacriticScore != null && gameInfo.metacriticScore != "0") {
+        if (gameInfo.metacriticScore != null && gameInfo.metacriticScore != "0") {
             RatingBadge(
                 label = stringResource(R.string.game_details_rating_label_metacritic),
                 score = gameInfo.metacriticScore,
                 subtitle = stringResource(R.string.game_details_rating_subtitle_score),
-                modifier = Modifier.weight(1f).fillMaxHeight()
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
             )
         }
     }

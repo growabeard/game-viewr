@@ -37,8 +37,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
 import com.witt.gameviewr.R
 import com.witt.gameviewr.data.model.Deal
-import com.witt.gameviewr.data.model.GameDetails
-import com.witt.gameviewr.data.model.GameInfo
 import com.witt.gameviewr.ui.GameListUiState
 import com.witt.gameviewr.ui.components.GameDetailsBottomSheet
 import com.witt.gameviewr.ui.components.GameList
@@ -168,24 +166,26 @@ fun GameListScreenDetailsPreview() {
             uiState = remember {
                 mutableStateOf(
                     GameListUiState(
-                        gameDetail = GameDetails(
-                            gameInfo = GameInfo(
-                                name = "Game 1",
-                                salePrice = "1.03",
-                                steamRatingText = "Very Positive",
-                                id = "1",
-                                storeID = "1234",
-                                steamAppID = "12345",
-                                retailPrice = "15.90",
-                                steamRatingPercent = "80",
-                                steamRatingCount = "6476",
-                                metacriticScore = "80",
-                                metacriticLink = null,
-                                releaseDate = 1234567890,
-                                publisher = "My publisher",
-                                steamworks = "1",
-                                imageUrl = "https://cdn.fanatical.com/production/product/400x225/105f34ca-7757-47ad-953e-7df7f016741e.jpeg",
-                            )
+                        gameDetail = Deal(
+                            internalName = "DEUSEXHUMANREVOLUTIONDIRECTORSCUT",
+                            title = "Deus Ex: Human Revolution - Director's Cut",
+                            metacriticLink = "/game/pc/deus-ex-human-revolution---directors-cut",
+                            dealID = "HhzMJAgQYGZ%2B%2BFPpBG%2BRFcuUQZJO3KXvlnyYYGwGUfU%3D",
+                            storeID = "1",
+                            id = "102249",
+                            salePrice = "2.99",
+                            retailPrice = "19.99",
+                            isOnSale = "1",
+                            savings = "85.042521",
+                            metacriticScore = "91",
+                            steamRatingText = "Very Positive",
+                            steamRatingPercent = "92",
+                            steamRatingCount = "17993",
+                            steamAppID = "238010",
+                            releaseDate = 1382400000,
+                            lastChange = 1621536418,
+                            dealRating = "9.6",
+                            imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/238010/capsule_sm_120.jpg?t=1619788192"
                         ),
                         query = "Search Query",
                         isLoading = false,
@@ -345,7 +345,7 @@ fun GameListScreen(
     onQueryChange: (String) -> Unit,
     onClearInputClick: () -> Unit,
     onGameDetailsDismiss: () -> Unit,
-    onGameClick: (String) -> Unit,
+    onGameClick: (Deal) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val uiStateValue = uiState.value
@@ -367,10 +367,10 @@ fun GameListScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         GameList(
-            onGameClick = onGameClick,
+            onGameClick = {deal -> onGameClick(deal)},
             query = uiStateValue.query,
             hasSearched = uiStateValue.hasSearched,
-            deals = deals,
+            games = deals,
             listState = listState
         )
     }

@@ -22,9 +22,19 @@ data class Deal(
     val steamRatingPercent: String? = null,
     val steamRatingCount: String? = null,
     val steamAppID: String? = null,
-    val releaseDate: Long,
+    val releaseDate: Long?,
     val lastChange: Long,
     val dealRating: String,
     @SerialName("thumb")
     val imageUrl: String
-)
+) {
+    val formattedReleaseDate: String
+        get() = if (releaseDate == null || releaseDate == 0L) {
+            "N/A"
+        } else {
+            java.time.Instant.ofEpochSecond(releaseDate)
+                .atZone(java.time.ZoneId.systemDefault())
+                .toLocalDate()
+                .format(java.time.format.DateTimeFormatter.ofLocalizedDate(java.time.format.FormatStyle.MEDIUM))
+        }
+}

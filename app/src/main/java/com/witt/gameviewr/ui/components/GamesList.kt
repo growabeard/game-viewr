@@ -38,17 +38,17 @@ import com.witt.gameviewr.data.model.Deal
 
 @Composable
 fun GameList(
-    onGameClick: (String) -> Unit,
+    onGameClick: (Deal) -> Unit,
     query: String,
     hasSearched: Boolean,
-    deals: LazyPagingItems<Deal>,
+    games: LazyPagingItems<Deal>,
     listState: LazyListState
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
-        if (deals.itemCount == 0 && deals.loadState.refresh !is LoadState.Loading) {
+        if (games.itemCount == 0 && games.loadState.refresh !is LoadState.Loading) {
             EmptyState(
                 query = query,
-                error = (deals.loadState.refresh as? LoadState.Error)?.error?.message,
+                error = (games.loadState.refresh as? LoadState.Error)?.error?.message,
                 hasSearched = hasSearched,
                 modifier = Modifier.align(Alignment.Center)
             )
@@ -59,22 +59,22 @@ fun GameList(
                 contentPadding = PaddingValues(horizontal = 16.dp)
             ) {
                 items(
-                    count = deals.itemCount,
-                    key = deals.itemKey { it.id }
+                    count = games.itemCount,
+                    key = games.itemKey { "${it.id}-${it.title}-${it.dealID}" }
                 ) { index ->
-                    val game = deals[index]
+                    val game = games[index]
                     if (game != null) {
                         GameItem(
                             game = game,
-                            onClick = { onGameClick(game.dealID) }
+                            onClick = { onGameClick(game) }
                         )
-                        if (index < deals.itemCount - 1) {
+                        if (index < games.itemCount - 1) {
                             Spacer(modifier = Modifier.height(12.dp))
                         }
                     }
                 }
 
-                when (val state = deals.loadState.append) {
+                when (val state = games.loadState.append) {
                     is LoadState.Loading -> {
                         item {
                             Box(
@@ -100,7 +100,7 @@ fun GameList(
             }
         }
 
-        if (deals.loadState.refresh is LoadState.Loading && deals.itemCount == 0) {
+        if (games.loadState.refresh is LoadState.Loading && games.itemCount == 0) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center)
             )

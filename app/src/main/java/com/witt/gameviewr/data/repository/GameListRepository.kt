@@ -4,7 +4,6 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.witt.gameviewr.data.model.Deal
-import com.witt.gameviewr.data.model.GameDetails
 import com.witt.gameviewr.data.paging.DealsPagingSource
 import com.witt.gameviewr.data.service.GameApiService
 import kotlinx.coroutines.flow.Flow
@@ -62,9 +61,5 @@ class GameListRepository @Inject constructor(
             onSale = onSale,
             output = output
         )
-    }
-
-    suspend fun getGameDetails(id: String): GameDetails {
-        return apiService.getGameDetails(id)
     }
 }
