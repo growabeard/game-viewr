@@ -189,7 +189,7 @@ fun EmptyState(
 
         val description = when {
             !hasSearched -> stringResource(R.string.empty_before_search_description)
-            error != null -> stringResource(R.string.empty_error_description)
+            error != null -> error
             else -> stringResource(R.string.empty_no_results_description, query)
         }
 
