@@ -29,6 +29,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     GameListScreen(
                         uiState = viewModel.uiState.collectAsStateWithLifecycle(),
+                        gamesFlow = viewModel.gamesFlow,
                         onSearch = viewModel::onSearch,
                         onQueryChange = viewModel::onQueryChange,
                         onClearInputClick = viewModel::onClearInputClick,

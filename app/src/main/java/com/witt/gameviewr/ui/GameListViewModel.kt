@@ -3,14 +3,19 @@ package com.witt.gameviewr.ui
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.filter
 import com.witt.gameviewr.data.model.Game
-import com.witt.gameviewr.data.model.GameDetails
 import com.witt.gameviewr.data.repository.GameListRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,62 +25,33 @@ class GameListViewModel @Inject constructor(private val repository: GameListRepo
     private val _uiState = MutableStateFlow(GameListUiState())
     val uiState = _uiState.asStateFlow()
 
+    private val _searchQuery = MutableStateFlow("")
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val gamesFlow: Flow<PagingData<Game>> = _searchQuery
+        .flatMapLatest { query ->
+            repository.getDealsStream(query)
+                .map { pagingData ->
+                    val seenIds = mutableSetOf<String>()
+                    pagingData.filter { game ->
+                        seenIds.add("${game.id}-${game.dealID}")
+                    }
+                }
+        }
+        .cachedIn(viewModelScope)
+
     fun onSearch(query: String) {
         Log.d(TAG, "onSearch: $query")
         val trimmedQuery = query.trim()
         if (trimmedQuery.isEmpty()) return
 
-        viewModelScope.launch {
-            try {
-                _uiState.update { it.copy(isLoading = true, error = null, hasSearched = true) }
-
-                val result = repository.getGames(query)
-                Log.d(TAG, "onSearch: $result")
-
-                _uiState.update {
-                    it.copy(
-                        listOfGames = result,
-                        isLoading = false
-                    )
-                }
-            } catch (e: Exception) {
-                Log.e(TAG, "onSearch: ${e.message}", e)
-                _uiState.update {
-                    it.copy(
-                        error = e.message ?: "An unknown error occurred",
-                        isLoading = false
-                    )
-                }
-            }
-        }
+        _uiState.update { it.copy(hasSearched = true) }
+        _searchQuery.value = trimmedQuery
     }
 
-    fun onGameClick(dealID: String) {
-        Log.d(TAG, "onGameClick: $dealID")
-        viewModelScope.launch {
-            try {
-                _uiState.update { it.copy(isLoading = true, error = null, hasSearched = true) }
-
-                val result = repository.getGameDetails(dealID)
-
-                Log.d(TAG, "onGameClick: $result")
-
-                _uiState.update {
-                    it.copy(
-                        gameDetail = result,
-                        isLoading = false
-                    )
-                }
-            } catch (e: Exception) {
-                Log.e(TAG, "onGameClick: ${e.message}", e)
-                _uiState.update {
-                    it.copy(
-                        error = e.message ?: "An unknown error occurred",
-                        isLoading = false
-                    )
-                }
-            }
-        }
+    fun onGameClick(game: Game) {
+        Log.d(TAG, "onGameClick: ${game.dealID}")
+        _uiState.update { it.copy(gameDetail = game) }
     }
 
     fun onClearInputClick() {
@@ -90,7 +66,7 @@ class GameListViewModel @Inject constructor(private val repository: GameListRepo
 
     fun onQueryChange(newQuery: String) {
         Log.d(TAG, "onQueryChange: $newQuery")
-        _uiState.value = _uiState.value.copy(query = newQuery)
+        _uiState.update { it.copy(query = newQuery) }
     }
 
     companion object {
@@ -100,8 +76,7 @@ class GameListViewModel @Inject constructor(private val repository: GameListRepo
 
 data class GameListUiState(
     val query: String = "",
-    val listOfGames: List<Game> = emptyList(),
-    val gameDetail: GameDetails? = null,
+    val gameDetail: Game? = null,
     val isLoading: Boolean = false,
     val error: String? = null,
     val hasSearched: Boolean = false
