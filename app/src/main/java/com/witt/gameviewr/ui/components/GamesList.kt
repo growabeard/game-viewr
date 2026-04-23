@@ -34,14 +34,14 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
 import com.witt.gameviewr.R
-import com.witt.gameviewr.data.model.Deal
+import com.witt.gameviewr.data.model.Game
 
 @Composable
 fun GameList(
-    onGameClick: (Deal) -> Unit,
+    onGameClick: (Game) -> Unit,
     query: String,
     hasSearched: Boolean,
-    games: LazyPagingItems<Deal>,
+    games: LazyPagingItems<Game>,
     listState: LazyListState
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
@@ -110,7 +110,7 @@ fun GameList(
 
 @Composable
 private fun GameItem(
-    game: Deal,
+    game: Game,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {

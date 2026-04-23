@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Deal(
+data class Game(
     val internalName: String,
     val title: String,
     val metacriticLink: String? = null,

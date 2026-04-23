@@ -36,7 +36,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
 import com.witt.gameviewr.R
-import com.witt.gameviewr.data.model.Deal
+import com.witt.gameviewr.data.model.Game
 import com.witt.gameviewr.ui.GameListUiState
 import com.witt.gameviewr.ui.components.GameDetailsBottomSheet
 import com.witt.gameviewr.ui.components.GameList
@@ -48,8 +48,8 @@ import kotlinx.coroutines.flow.flowOf
 @Composable
 fun GameListScreenPreview() {
     GameViewrTheme {
-        val deals = listOf(
-            Deal(
+        val games = listOf(
+            Game(
                 internalName = "DEUSEXHUMANREVOLUTIONDIRECTORSCUT",
                 title = "Deus Ex: Human Revolution - Director's Cut",
                 metacriticLink = "/game/pc/deus-ex-human-revolution---directors-cut",
@@ -70,7 +70,7 @@ fun GameListScreenPreview() {
                 dealRating = "9.6",
                 imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/238010/capsule_sm_120.jpg?t=1619788192"
             ),
-            Deal(
+            Game(
                 internalName = "THIEFDEADLYSHADOWS",
                 title = "Thief: Deadly Shadows",
                 metacriticLink = "/game/pc/thief-deadly-shadows",
@@ -91,7 +91,7 @@ fun GameListScreenPreview() {
                 dealRating = "9.4",
                 imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/6980/capsule_sm_120.jpg?t=1592493801"
             ),
-            Deal(
+            Game(
                 internalName = "JUSTCAUSE2",
                 title = "Just Cause 2",
                 metacriticLink = "/game/pc/just-cause-2",
@@ -124,7 +124,7 @@ fun GameListScreenPreview() {
                     )
                 )
             },
-            dealsFlow = flowOf(PagingData.from(deals)),
+            dealsFlow = flowOf(PagingData.from(games)),
             onSearch = {},
             onQueryChange = {},
             onClearInputClick = {},
@@ -139,8 +139,8 @@ fun GameListScreenPreview() {
 @Composable
 fun GameListScreenDetailsPreview() {
     GameViewrTheme {
-        val deals = listOf(
-            Deal(
+        val games = listOf(
+            Game(
                 internalName = "DEUSEXHUMANREVOLUTIONDIRECTORSCUT",
                 title = "Deus Ex: Human Revolution - Director's Cut",
                 metacriticLink = "/game/pc/deus-ex-human-revolution---directors-cut",
@@ -166,7 +166,7 @@ fun GameListScreenDetailsPreview() {
             uiState = remember {
                 mutableStateOf(
                     GameListUiState(
-                        gameDetail = Deal(
+                        gameDetail = Game(
                             internalName = "DEUSEXHUMANREVOLUTIONDIRECTORSCUT",
                             title = "Deus Ex: Human Revolution - Director's Cut",
                             metacriticLink = "/game/pc/deus-ex-human-revolution---directors-cut",
@@ -194,7 +194,7 @@ fun GameListScreenDetailsPreview() {
                     )
                 )
             },
-            dealsFlow = flowOf(PagingData.from(deals)),
+            dealsFlow = flowOf(PagingData.from(games)),
             onSearch = {},
             onQueryChange = {},
             onClearInputClick = {},
@@ -340,12 +340,12 @@ fun GameListScreenErrorLoadingPreview() {
 @Composable
 fun GameListScreen(
     uiState: State<GameListUiState>,
-    dealsFlow: Flow<PagingData<Deal>>,
+    dealsFlow: Flow<PagingData<Game>>,
     onSearch: (String) -> Unit,
     onQueryChange: (String) -> Unit,
     onClearInputClick: () -> Unit,
     onGameDetailsDismiss: () -> Unit,
-    onGameClick: (Deal) -> Unit,
+    onGameClick: (Game) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val uiStateValue = uiState.value

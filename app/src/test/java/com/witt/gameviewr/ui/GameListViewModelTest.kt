@@ -2,7 +2,7 @@ package com.witt.gameviewr.ui
 
 import android.util.Log
 import com.witt.gameviewr.MainDispatcherRule
-import com.witt.gameviewr.data.model.Deal
+import com.witt.gameviewr.data.model.Game
 import com.witt.gameviewr.data.repository.GameListRepository
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -61,7 +61,7 @@ class GameListViewModelTest {
     fun `ensure onSearch will update the game list in state`() {
         coEvery { repository.getDeals(title = any()) } returns
                 listOf(
-                    Deal(
+                    Game(
                         internalName = "DEUSEXHUMANREVOLUTIONDIRECTORSCUT",
                         title = "Deus Ex: Human Revolution - Director's Cut",
                         metacriticLink = "/game/pc/deus-ex-human-revolution---directors-cut",
@@ -82,7 +82,7 @@ class GameListViewModelTest {
                         dealRating = "9.6",
                         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/238010/capsule_sm_120.jpg?t=1619788192"
                     ),
-                    Deal(
+                    Game(
                         internalName = "THIEFDEADLYSHADOWS",
                         title = "Thief: Deadly Shadows",
                         metacriticLink = "/game/pc/thief-deadly-shadows",
@@ -103,7 +103,7 @@ class GameListViewModelTest {
                         dealRating = "9.4",
                         imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/6980/capsule_sm_120.jpg?t=1592493801"
                     ),
-                    Deal(
+                    Game(
                         internalName = "JUSTCAUSE2",
                         title = "Just Cause 2",
                         metacriticLink = "/game/pc/just-cause-2",

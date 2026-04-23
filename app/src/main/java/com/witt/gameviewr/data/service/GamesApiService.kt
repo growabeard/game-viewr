@@ -1,6 +1,6 @@
 package com.witt.gameviewr.data.service
 
-import com.witt.gameviewr.data.model.Deal
+import com.witt.gameviewr.data.model.Game
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -25,5 +25,5 @@ interface GameApiService {
         @Query("steamworks") steamworks: Boolean? = null,
         @Query("onSale") onSale: Boolean? = null,
         @Query("output") output: String? = null
-    ): List<Deal>
+    ): List<Game>
 }

@@ -3,8 +3,8 @@ package com.witt.gameviewr.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.witt.gameviewr.data.model.Deal
-import com.witt.gameviewr.data.paging.DealsPagingSource
+import com.witt.gameviewr.data.model.Game
+import com.witt.gameviewr.data.paging.GamesPagingSource
 import com.witt.gameviewr.data.service.GameApiService
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -14,13 +14,13 @@ import javax.inject.Singleton
 class GameListRepository @Inject constructor(
     private val apiService: GameApiService
 ) {
-    fun getDealsStream(query: String): Flow<PagingData<Deal>> {
+    fun getDealsStream(query: String): Flow<PagingData<Game>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 25,
                 enablePlaceholders = false
             ),
-            pagingSourceFactory = { DealsPagingSource(this, query) }
+            pagingSourceFactory = { GamesPagingSource(this, query) }
         ).flow
     }
 
@@ -41,7 +41,7 @@ class GameListRepository @Inject constructor(
         steamworks: Boolean? = null,
         onSale: Boolean? = null,
         output: String? = null
-    ): List<Deal> {
+    ): List<Game> {
         return apiService.getAllDeals(
             pageNumber = pageNumber,
             pageSize = pageSize,

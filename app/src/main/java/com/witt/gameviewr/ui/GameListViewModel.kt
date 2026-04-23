@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.witt.gameviewr.data.model.Deal
+import com.witt.gameviewr.data.model.Game
 import com.witt.gameviewr.data.repository.GameListRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -26,7 +26,7 @@ class GameListViewModel @Inject constructor(private val repository: GameListRepo
     private val _searchQuery = MutableStateFlow("")
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val dealsFlow: Flow<PagingData<Deal>> = _searchQuery
+    val dealsFlow: Flow<PagingData<Game>> = _searchQuery
         .flatMapLatest { query ->
             repository.getDealsStream(query)
         }
@@ -41,7 +41,7 @@ class GameListViewModel @Inject constructor(private val repository: GameListRepo
         _searchQuery.value = trimmedQuery
     }
 
-    fun onGameClick(game: Deal) {
+    fun onGameClick(game: Game) {
         Log.d(TAG, "onGameClick: ${game.dealID}")
         _uiState.update { it.copy(gameDetail = game) }
     }
@@ -68,7 +68,7 @@ class GameListViewModel @Inject constructor(private val repository: GameListRepo
 
 data class GameListUiState(
     val query: String = "",
-    val gameDetail: Deal? = null,
+    val gameDetail: Game? = null,
     val isLoading: Boolean = false,
     val error: String? = null,
     val hasSearched: Boolean = false

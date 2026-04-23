@@ -30,13 +30,13 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.witt.gameviewr.R
-import com.witt.gameviewr.data.model.Deal
+import com.witt.gameviewr.data.model.Game
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GameDetailsBottomSheet(
-    gameInfo: Deal,
+    gameInfo: Game,
     sheetState: SheetState,
     onGameDetailsDismiss: () -> Unit
 ) {
@@ -82,7 +82,7 @@ fun GameDetailsBottomSheet(
 }
 
 @Composable
-private fun PricingSection(gameInfo: Deal) {
+private fun PricingSection(gameInfo: Game) {
     val sale = gameInfo.salePrice
     val retail = gameInfo.retailPrice
 
@@ -113,7 +113,7 @@ private fun PricingSection(gameInfo: Deal) {
 }
 
 @Composable
-private fun RatingSection(gameInfo: Deal) {
+private fun RatingSection(gameInfo: Game) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

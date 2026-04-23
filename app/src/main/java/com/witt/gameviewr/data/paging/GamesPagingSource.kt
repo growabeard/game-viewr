@@ -2,15 +2,15 @@ package com.witt.gameviewr.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.witt.gameviewr.data.model.Deal
+import com.witt.gameviewr.data.model.Game
 import com.witt.gameviewr.data.repository.GameListRepository
 
-class DealsPagingSource(
+class GamesPagingSource(
     private val repository: GameListRepository,
     private val query: String
-) : PagingSource<Int, Deal>() {
+) : PagingSource<Int, Game>() {
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Deal> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Game> {
         return try {
             val page = params.key ?: 0
             val response = repository.getDeals(
@@ -29,7 +29,7 @@ class DealsPagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, Deal>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, Game>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
