@@ -26,7 +26,7 @@ class GameListViewModel @Inject constructor(private val repository: GameListRepo
     private val _searchQuery = MutableStateFlow("")
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val dealsFlow: Flow<PagingData<Game>> = _searchQuery
+    val gamesFlow: Flow<PagingData<Game>> = _searchQuery
         .flatMapLatest { query ->
             repository.getDealsStream(query)
         }

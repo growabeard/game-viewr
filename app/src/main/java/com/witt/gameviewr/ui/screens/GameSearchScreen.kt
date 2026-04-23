@@ -124,7 +124,7 @@ fun GameListScreenPreview() {
                     )
                 )
             },
-            dealsFlow = flowOf(PagingData.from(games)),
+            gamesFlow = flowOf(PagingData.from(games)),
             onSearch = {},
             onQueryChange = {},
             onClearInputClick = {},
@@ -194,7 +194,7 @@ fun GameListScreenDetailsPreview() {
                     )
                 )
             },
-            dealsFlow = flowOf(PagingData.from(games)),
+            gamesFlow = flowOf(PagingData.from(games)),
             onSearch = {},
             onQueryChange = {},
             onClearInputClick = {},
@@ -220,7 +220,7 @@ fun GameListScreenInitialPreview() {
                     )
                 )
             },
-            dealsFlow = flowOf(PagingData.empty()),
+            gamesFlow = flowOf(PagingData.empty()),
             onSearch = {},
             onQueryChange = {},
             onClearInputClick = {},
@@ -246,7 +246,7 @@ fun GameListScreenLoadingPreview() {
                     )
                 )
             },
-            dealsFlow = flowOf(PagingData.empty()),
+            gamesFlow = flowOf(PagingData.empty()),
             onSearch = {},
             onQueryChange = {},
             onClearInputClick = {},
@@ -272,7 +272,7 @@ fun GameListScreenErrorPreview() {
                     )
                 )
             },
-            dealsFlow = flowOf(PagingData.empty()),
+            gamesFlow = flowOf(PagingData.empty()),
             onSearch = {},
             onQueryChange = {},
             onClearInputClick = {},
@@ -298,7 +298,7 @@ fun GameListScreenErrorEmptyPreview() {
                     )
                 )
             },
-            dealsFlow = flowOf(PagingData.empty()),
+            gamesFlow = flowOf(PagingData.empty()),
             onSearch = {},
             onQueryChange = {},
             onClearInputClick = {},
@@ -324,7 +324,7 @@ fun GameListScreenErrorLoadingPreview() {
                     )
                 )
             },
-            dealsFlow = flowOf(PagingData.empty()),
+            gamesFlow = flowOf(PagingData.empty()),
             onSearch = {},
             onQueryChange = {},
             onClearInputClick = {},
@@ -340,7 +340,7 @@ fun GameListScreenErrorLoadingPreview() {
 @Composable
 fun GameListScreen(
     uiState: State<GameListUiState>,
-    dealsFlow: Flow<PagingData<Game>>,
+    gamesFlow: Flow<PagingData<Game>>,
     onSearch: (String) -> Unit,
     onQueryChange: (String) -> Unit,
     onClearInputClick: () -> Unit,
@@ -349,7 +349,7 @@ fun GameListScreen(
     modifier: Modifier = Modifier
 ) {
     val uiStateValue = uiState.value
-    val deals = dealsFlow.collectAsLazyPagingItems()
+    val games = gamesFlow.collectAsLazyPagingItems()
     val listState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val showBottomSheet = uiStateValue.gameDetail != null
@@ -367,10 +367,10 @@ fun GameListScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         GameList(
-            onGameClick = {deal -> onGameClick(deal)},
+            onGameClick = {game -> onGameClick(game)},
             query = uiStateValue.query,
             hasSearched = uiStateValue.hasSearched,
-            games = deals,
+            games = games,
             listState = listState
         )
     }
