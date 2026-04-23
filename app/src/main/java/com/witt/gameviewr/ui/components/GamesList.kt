@@ -62,7 +62,7 @@ fun GameList(
             ) {
                 items(
                     count = uiState.listOfGames.size,
-                    key = { index -> uiState.listOfGames[index].id }
+                    key = { index -> "${uiState.listOfGames[index].id}-${uiState.listOfGames[index].title}-$index" } //Try removing this and searching for "ste" and scrolling down..
                 ) { index ->
                     GameItem(
                         game = uiState.listOfGames[index],
