@@ -3,12 +3,15 @@ package com.witt.gameviewr.data.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.witt.gameviewr.data.model.Game
+import com.witt.gameviewr.data.model.GameResponse
 import com.witt.gameviewr.data.repository.GameListRepository
 
 class GamesPagingSource(
     private val repository: GameListRepository,
     private val query: String
 ) : PagingSource<Int, Game>() {
+
+    private val seenIds = mutableSetOf<String>()
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Game> {
         return try {
@@ -19,11 +22,22 @@ class GamesPagingSource(
                 pageSize = params.loadSize
             )
 
-            LoadResult.Page(
-                data = response,
-                prevKey = if (page == 0) null else page - 1,
-                nextKey = if (response.isEmpty()) null else page + 1
-            )
+            when (response) {
+                is GameResponse.Success -> {
+                    val filteredGames = response.games.filter { game ->
+                        seenIds.add("${game.id}-${game.dealID}")
+                    }
+
+                    LoadResult.Page(
+                        data = filteredGames,
+                        prevKey = if (page == 0) null else page - 1,
+                        nextKey = if (response.games.isEmpty()) null else page + 1
+                    )
+                }
+                is GameResponse.Error -> {
+                    LoadResult.Error(Exception(response.message))
+                }
+            }
         } catch (e: Exception) {
             LoadResult.Error(e)
         }
