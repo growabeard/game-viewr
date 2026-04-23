@@ -23,16 +23,18 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.tooling.preview.Preview
 import com.witt.gameviewr.R
 import com.witt.gameviewr.data.model.Deal
 import com.witt.gameviewr.data.model.GameDetails
@@ -41,86 +43,90 @@ import com.witt.gameviewr.ui.GameListUiState
 import com.witt.gameviewr.ui.components.GameDetailsBottomSheet
 import com.witt.gameviewr.ui.components.GameList
 import com.witt.gameviewr.ui.theme.GameViewrTheme
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 
 @Preview(showSystemUi = true)
 @Composable
 fun GameListScreenPreview() {
     GameViewrTheme {
+        val deals = listOf(
+            Deal(
+                internalName = "DEUSEXHUMANREVOLUTIONDIRECTORSCUT",
+                title = "Deus Ex: Human Revolution - Director's Cut",
+                metacriticLink = "/game/pc/deus-ex-human-revolution---directors-cut",
+                dealID = "HhzMJAgQYGZ%2B%2BFPpBG%2BRFcuUQZJO3KXvlnyYYGwGUfU%3D",
+                storeID = "1",
+                id = "102249",
+                salePrice = "2.99",
+                retailPrice = "19.99",
+                isOnSale = "1",
+                savings = "85.042521",
+                metacriticScore = "91",
+                steamRatingText = "Very Positive",
+                steamRatingPercent = "92",
+                steamRatingCount = "17993",
+                steamAppID = "238010",
+                releaseDate = 1382400000,
+                lastChange = 1621536418,
+                dealRating = "9.6",
+                imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/238010/capsule_sm_120.jpg?t=1619788192"
+            ),
+            Deal(
+                internalName = "THIEFDEADLYSHADOWS",
+                title = "Thief: Deadly Shadows",
+                metacriticLink = "/game/pc/thief-deadly-shadows",
+                dealID = "EX0oH20b7A1H2YiVjvVx5A0HH%2F4etw3x%2F6YMGVPpKbA%3D",
+                storeID = "1",
+                id = "396",
+                salePrice = "0.98",
+                retailPrice = "8.99",
+                isOnSale = "1",
+                savings = "89.098999",
+                metacriticScore = "85",
+                steamRatingText = "Very Positive",
+                steamRatingPercent = "81",
+                steamRatingCount = "1670",
+                steamAppID = "6980",
+                releaseDate = 1085443200,
+                lastChange = 1621540561,
+                dealRating = "9.4",
+                imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/6980/capsule_sm_120.jpg?t=1592493801"
+            ),
+            Deal(
+                internalName = "JUSTCAUSE2",
+                title = "Just Cause 2",
+                metacriticLink = "/game/pc/just-cause-2",
+                dealID = "z4El8C19yCEHrk1%2ByEedebThQVbblI7H0Z%2BAmxgZiS8%3D",
+                storeID = "1",
+                id = "180",
+                salePrice = "1.49",
+                retailPrice = "14.99",
+                isOnSale = "1",
+                savings = "90.060040",
+                metacriticScore = "84",
+                steamRatingText = "Very Positive",
+                steamRatingPercent = "90",
+                steamRatingCount = "35296",
+                steamAppID = "8190",
+                releaseDate = 1269302400,
+                lastChange = 1621536477,
+                dealRating = "9.4",
+                imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/8190/capsule_sm_120.jpg?t=1593180404"
+            ),
+        )
         GameListScreen(
             uiState = remember {
                 mutableStateOf(
                     GameListUiState(
-                        listOfGames = listOf(
-                            Deal(
-                                internalName = "DEUSEXHUMANREVOLUTIONDIRECTORSCUT",
-                                title = "Deus Ex: Human Revolution - Director's Cut",
-                                metacriticLink = "/game/pc/deus-ex-human-revolution---directors-cut",
-                                dealID = "HhzMJAgQYGZ%2B%2BFPpBG%2BRFcuUQZJO3KXvlnyYYGwGUfU%3D",
-                                storeID = "1",
-                                id = "102249",
-                                salePrice = "2.99",
-                                retailPrice = "19.99",
-                                isOnSale = "1",
-                                savings = "85.042521",
-                                metacriticScore = "91",
-                                steamRatingText = "Very Positive",
-                                steamRatingPercent = "92",
-                                steamRatingCount = "17993",
-                                steamAppID = "238010",
-                                releaseDate = 1382400000,
-                                lastChange = 1621536418,
-                                dealRating = "9.6",
-                                imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/238010/capsule_sm_120.jpg?t=1619788192"
-                            ),
-                            Deal(
-                                internalName = "THIEFDEADLYSHADOWS",
-                                title = "Thief: Deadly Shadows",
-                                metacriticLink = "/game/pc/thief-deadly-shadows",
-                                dealID = "EX0oH20b7A1H2YiVjvVx5A0HH%2F4etw3x%2F6YMGVPpKbA%3D",
-                                storeID = "1",
-                                id = "396",
-                                salePrice = "0.98",
-                                retailPrice = "8.99",
-                                isOnSale = "1",
-                                savings = "89.098999",
-                                metacriticScore = "85",
-                                steamRatingText = "Very Positive",
-                                steamRatingPercent = "81",
-                                steamRatingCount = "1670",
-                                steamAppID = "6980",
-                                releaseDate = 1085443200,
-                                lastChange = 1621540561,
-                                dealRating = "9.4",
-                                imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/6980/capsule_sm_120.jpg?t=1592493801"
-                            ),
-                            Deal(
-                                internalName = "JUSTCAUSE2",
-                                title = "Just Cause 2",
-                                metacriticLink = "/game/pc/just-cause-2",
-                                dealID = "z4El8C19yCEHrk1%2ByEedebThQVbblI7H0Z%2BAmxgZiS8%3D",
-                                storeID = "1",
-                                id = "180",
-                                salePrice = "1.49",
-                                retailPrice = "14.99",
-                                isOnSale = "1",
-                                savings = "90.060040",
-                                metacriticScore = "84",
-                                steamRatingText = "Very Positive",
-                                steamRatingPercent = "90",
-                                steamRatingCount = "35296",
-                                steamAppID = "8190",
-                                releaseDate = 1269302400,
-                                lastChange = 1621536477,
-                                dealRating = "9.4",
-                                imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/8190/capsule_sm_120.jpg?t=1593180404"
-                            ),
-                        ),
                         query = "Search Query",
                         isLoading = false,
-                        error = null
+                        error = null,
+                        hasSearched = true
                     )
                 )
             },
+            dealsFlow = flowOf(PagingData.from(deals)),
             onSearch = {},
             onQueryChange = {},
             onClearInputClick = {},
@@ -135,33 +141,33 @@ fun GameListScreenPreview() {
 @Composable
 fun GameListScreenDetailsPreview() {
     GameViewrTheme {
+        val deals = listOf(
+            Deal(
+                internalName = "DEUSEXHUMANREVOLUTIONDIRECTORSCUT",
+                title = "Deus Ex: Human Revolution - Director's Cut",
+                metacriticLink = "/game/pc/deus-ex-human-revolution---directors-cut",
+                dealID = "HhzMJAgQYGZ%2B%2BFPpBG%2BRFcuUQZJO3KXvlnyYYGwGUfU%3D",
+                storeID = "1",
+                id = "102249",
+                salePrice = "2.99",
+                retailPrice = "19.99",
+                isOnSale = "1",
+                savings = "85.042521",
+                metacriticScore = "91",
+                steamRatingText = "Very Positive",
+                steamRatingPercent = "92",
+                steamRatingCount = "17993",
+                steamAppID = "238010",
+                releaseDate = 1382400000,
+                lastChange = 1621536418,
+                dealRating = "9.6",
+                imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/238010/capsule_sm_120.jpg?t=1619788192"
+            )
+        )
         GameListScreen(
             uiState = remember {
                 mutableStateOf(
                     GameListUiState(
-                        listOfGames = listOf(
-                            Deal(
-                                internalName = "DEUSEXHUMANREVOLUTIONDIRECTORSCUT",
-                                title = "Deus Ex: Human Revolution - Director's Cut",
-                                metacriticLink = "/game/pc/deus-ex-human-revolution---directors-cut",
-                                dealID = "HhzMJAgQYGZ%2B%2BFPpBG%2BRFcuUQZJO3KXvlnyYYGwGUfU%3D",
-                                storeID = "1",
-                                id = "102249",
-                                salePrice = "2.99",
-                                retailPrice = "19.99",
-                                isOnSale = "1",
-                                savings = "85.042521",
-                                metacriticScore = "91",
-                                steamRatingText = "Very Positive",
-                                steamRatingPercent = "92",
-                                steamRatingCount = "17993",
-                                steamAppID = "238010",
-                                releaseDate = 1382400000,
-                                lastChange = 1621536418,
-                                dealRating = "9.6",
-                                imageUrl = "https://cdn.cloudflare.steamstatic.com/steam/apps/238010/capsule_sm_120.jpg?t=1619788192"
-                            )
-                        ),
                         gameDetail = GameDetails(
                             gameInfo = GameInfo(
                                 name = "Game 1",
@@ -183,10 +189,12 @@ fun GameListScreenDetailsPreview() {
                         ),
                         query = "Search Query",
                         isLoading = false,
-                        error = null
+                        error = null,
+                        hasSearched = true
                     )
                 )
             },
+            dealsFlow = flowOf(PagingData.from(deals)),
             onSearch = {},
             onQueryChange = {},
             onClearInputClick = {},
@@ -205,7 +213,6 @@ fun GameListScreenInitialPreview() {
             uiState = remember {
                 mutableStateOf(
                     GameListUiState(
-                        listOfGames = emptyList(),
                         query = "",
                         isLoading = false,
                         hasSearched = false,
@@ -213,6 +220,7 @@ fun GameListScreenInitialPreview() {
                     )
                 )
             },
+            dealsFlow = flowOf(PagingData.empty()),
             onSearch = {},
             onQueryChange = {},
             onClearInputClick = {},
@@ -231,13 +239,14 @@ fun GameListScreenLoadingPreview() {
             uiState = remember {
                 mutableStateOf(
                     GameListUiState(
-                        listOfGames = emptyList(),
                         query = "Loading query",
                         isLoading = true,
-                        error = null
+                        error = null,
+                        hasSearched = true
                     )
                 )
             },
+            dealsFlow = flowOf(PagingData.empty()),
             onSearch = {},
             onQueryChange = {},
             onClearInputClick = {},
@@ -256,13 +265,14 @@ fun GameListScreenErrorPreview() {
             uiState = remember {
                 mutableStateOf(
                     GameListUiState(
-                        listOfGames = emptyList(),
                         query = "Loading query",
                         isLoading = false,
-                        error = "There was an error"
+                        error = "There was an error",
+                        hasSearched = true
                     )
                 )
             },
+            dealsFlow = flowOf(PagingData.empty()),
             onSearch = {},
             onQueryChange = {},
             onClearInputClick = {},
@@ -281,13 +291,14 @@ fun GameListScreenErrorEmptyPreview() {
             uiState = remember {
                 mutableStateOf(
                     GameListUiState(
-                        listOfGames = emptyList(),
                         query = "",
                         isLoading = false,
-                        error = "There was an error"
+                        error = "There was an error",
+                        hasSearched = false
                     )
                 )
             },
+            dealsFlow = flowOf(PagingData.empty()),
             onSearch = {},
             onQueryChange = {},
             onClearInputClick = {},
@@ -306,13 +317,14 @@ fun GameListScreenErrorLoadingPreview() {
             uiState = remember {
                 mutableStateOf(
                     GameListUiState(
-                        listOfGames = emptyList(),
                         query = "",
                         isLoading = true,
-                        error = "There was an error"
+                        error = "There was an error",
+                        hasSearched = false
                     )
                 )
             },
+            dealsFlow = flowOf(PagingData.empty()),
             onSearch = {},
             onQueryChange = {},
             onClearInputClick = {},
@@ -323,10 +335,12 @@ fun GameListScreenErrorLoadingPreview() {
     }
 }
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GameListScreen(
     uiState: State<GameListUiState>,
+    dealsFlow: Flow<PagingData<Deal>>,
     onSearch: (String) -> Unit,
     onQueryChange: (String) -> Unit,
     onClearInputClick: () -> Unit,
@@ -334,28 +348,35 @@ fun GameListScreen(
     onGameClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val uiState = uiState.value
+    val uiStateValue = uiState.value
+    val deals = dealsFlow.collectAsLazyPagingItems()
     val listState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val showBottomSheet = uiState.gameDetail != null
+    val showBottomSheet = uiStateValue.gameDetail != null
 
-    LaunchedEffect(uiState.listOfGames) {
-        if (uiState.listOfGames.isNotEmpty()) {
+    LaunchedEffect(uiStateValue.query) {
+        if (uiStateValue.query.isNotEmpty()) {
             listState.scrollToItem(0)
         }
     }
 
     Column(modifier = modifier) {
 
-        SearchBar(uiState, onQueryChange, onClearInputClick, onSearch)
+        SearchBar(uiStateValue, onQueryChange, onClearInputClick, onSearch)
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        GameList(onGameClick, uiState, listState)
+        GameList(
+            onGameClick = onGameClick,
+            query = uiStateValue.query,
+            hasSearched = uiStateValue.hasSearched,
+            deals = deals,
+            listState = listState
+        )
     }
 
     if (showBottomSheet) {
-        GameDetailsBottomSheet(uiState.gameDetail, sheetState, onGameDetailsDismiss)
+        GameDetailsBottomSheet(uiStateValue.gameDetail, sheetState, onGameDetailsDismiss)
     }
 }
 

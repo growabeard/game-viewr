@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,30 +29,27 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
 import com.witt.gameviewr.R
 import com.witt.gameviewr.data.model.Deal
-import com.witt.gameviewr.ui.GameListUiState
 
 @Composable
 fun GameList(
     onGameClick: (String) -> Unit,
-    uiState: GameListUiState,
+    query: String,
+    hasSearched: Boolean,
+    deals: LazyPagingItems<Deal>,
     listState: LazyListState
 ) {
-    if (uiState.error != null) {
-        ErrorMessage(
-            message = uiState.error,
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
-    }
-
     Box(modifier = Modifier.fillMaxSize()) {
-        if (uiState.listOfGames.isEmpty() && !uiState.isLoading) {
+        if (deals.itemCount == 0 && deals.loadState.refresh !is LoadState.Loading) {
             EmptyState(
-                query = uiState.query,
-                error = uiState.error,
-                hasSearched = uiState.hasSearched,
+                query = query,
+                error = (deals.loadState.refresh as? LoadState.Error)?.error?.message,
+                hasSearched = hasSearched,
                 modifier = Modifier.align(Alignment.Center)
             )
         } else {
@@ -61,18 +59,51 @@ fun GameList(
                 contentPadding = PaddingValues(horizontal = 16.dp)
             ) {
                 items(
-                    count = uiState.listOfGames.size,
-                    key = { index -> "${uiState.listOfGames[index].id}-${uiState.listOfGames[index].title}-$index" } //Try removing this and searching for "ste" and scrolling down..
+                    count = deals.itemCount,
+                    key = deals.itemKey { it.id }
                 ) { index ->
-                    GameItem(
-                        game = uiState.listOfGames[index],
-                        onClick = { onGameClick(uiState.listOfGames[index].dealID) }
-                    )
-                    if (index < uiState.listOfGames.size - 1) {
-                        Spacer(modifier = Modifier.height(12.dp))
+                    val game = deals[index]
+                    if (game != null) {
+                        GameItem(
+                            game = game,
+                            onClick = { onGameClick(game.dealID) }
+                        )
+                        if (index < deals.itemCount - 1) {
+                            Spacer(modifier = Modifier.height(12.dp))
+                        }
                     }
                 }
+
+                when (val state = deals.loadState.append) {
+                    is LoadState.Loading -> {
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                            }
+                        }
+                    }
+                    is LoadState.Error -> {
+                        item {
+                            ErrorMessage(
+                                message = state.error.message ?: "Error loading more results",
+                                modifier = Modifier.padding(16.dp)
+                            )
+                        }
+                    }
+                    else -> {}
+                }
             }
+        }
+
+        if (deals.loadState.refresh is LoadState.Loading && deals.itemCount == 0) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
+            )
         }
     }
 }
