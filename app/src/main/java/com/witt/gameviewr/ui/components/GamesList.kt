@@ -87,6 +87,7 @@ fun GameList(
                             }
                         }
                     }
+
                     is LoadState.Error -> {
                         item {
                             ErrorMessage(
@@ -95,6 +96,7 @@ fun GameList(
                             )
                         }
                     }
+
                     else -> {}
                 }
             }
